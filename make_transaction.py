@@ -14,7 +14,7 @@ node_url = "https://rinkeby.infura.io/v3/646f232797a44ce58c336cf4e852905d"
 transaction_template = {
     'to': None,
     'value': None,
-    'gas': 2000000,
+    'gas': 200000,
     'gasPrice': None,
     'nonce': None,
     'chainId': 4
