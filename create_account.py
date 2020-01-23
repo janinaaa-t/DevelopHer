@@ -13,7 +13,7 @@ if __name__ == '__main__':
     print("private: " + str(account.privateKey.hex()))
 
     encrypted_account = account.encrypt(password)
-    if path.exists:
+    if path.exists(keyfile):
         print('Keyfile ' + keyfile + " already exists")
         exit(1)
     with open(keyfile, "w") as file:
