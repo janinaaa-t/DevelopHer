@@ -7,12 +7,12 @@ node_url = 'https://rinkeby.infura.io/v3/646f232797a44ce58c336cf4e852905d'
 w3 = Web3(Web3.HTTPProvider(node_url))
 w3.middleware_onion.inject(geth_poa_middleware, layer=0)
 
-from_account_file = 'account.silke.json'
-receiver_addresses = ['0x2418B7e00C5B8590d6FeB89f1e70f9A13A4181f7'] # Hier die Adressen einfügen, an die das Ether gehen soll
-
-# Value in Ether
+###############################Customize these values###################
+keyfile = 'account.silke.json'
+password = ''
+receiver_addresses = ['0x2418B7e00C5B8590d6FeB89f1e70f9A13A4181f7']
 value = 0.01
-
+########################################################################
 
 transaction_template = {
     'to': None,
@@ -25,9 +25,9 @@ transaction_template = {
 
 
 def import_keyfile(keyfile: str):
-    with open(keyfile, "r") as account_file:
-        from_account_json = account_file.read()
-    private_key = Account.decrypt(from_account_json, "")
+    with open(keyfile, "r") as keyfile:
+        account_json = keyfile.read()
+        private_key = Account.decrypt(account_json, password)
     return Account.privateKeyToAccount(private_key)
 
 
@@ -49,7 +49,7 @@ def send_transaction(sender_account: Account, receiver: str, value: float):
 
 if __name__ == '__main__':
 
-    from_account = import_keyfile(from_account_file)
+    from_account = import_keyfile(keyfile)
 
     transaction_hashes = []
     print('sending transactions!')
