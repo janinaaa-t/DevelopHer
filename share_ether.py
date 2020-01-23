@@ -11,7 +11,7 @@ w3.middleware_onion.inject(geth_poa_middleware, layer=0)
 keyfile = 'account.silke.json'
 password = ''
 receiver_addresses = ['0x2418B7e00C5B8590d6FeB89f1e70f9A13A4181f7']
-value = 0.01
+value = 0.2
 ########################################################################
 
 transaction_template = {
