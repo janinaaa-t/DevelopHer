@@ -23,7 +23,6 @@ w3 = Web3(Web3.HTTPProvider(node_url))
 w3.middleware_onion.inject(geth_poa_middleware, layer=0)
 
 
-
 def compile_source_file(file_path):
     with open(file_path, 'r') as f:
         source = f.read()
