@@ -9,7 +9,7 @@ proposals = [
     str.encode('Käsespätzle'),
     str.encode('Pfannkuchen')
 ]
-voters = ["0x2418B7e00C5B8590d6FeB89f1e70f9A13A4181f7", "..."]
+voters = ["0x2418B7e00C5B8590d6FeB89f1e70f9A13A4181f7"]
 
 from_account_file = "account.silke.json"
 password = ''
@@ -41,7 +41,8 @@ def deploy_contract(w3, contract_interface, account, nonce):
         'gas':
             4727597,
         'gasPrice':
-            w3.toWei('21', 'gwei')
+            w3.toWei('21', 'gwei'),
+        'chainId': 4
     })
     signed = account.signTransaction(construct_txn)
     return w3.eth.sendRawTransaction(signed.rawTransaction).hex()
@@ -68,7 +69,8 @@ def give_right_to_vote(contract, account, voters, nonce):
             'gas':
                 4727597,
             'gasPrice':
-                w3.toWei('21', 'gwei')
+                w3.toWei('21', 'gwei'),
+            'chainId': 4
         })
         nonce = nonce + 1
         signed = account.signTransaction(construct_txn)

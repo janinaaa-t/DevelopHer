@@ -35,7 +35,8 @@ def vote(W3, contract_interface, private_key, proposal):
         'gas':
             4727597,
         'gasPrice':
-            W3.toWei('21', 'gwei')
+            W3.toWei('21', 'gwei'),
+        'chainId': 4
     })
 
     signed = acct.signTransaction(construct_txn)
