@@ -1,12 +1,13 @@
-import web3
 from web3 import Web3
 from web3.middleware import geth_poa_middleware
 from solc import compile_source
 
+#############################Customize this field###########################
+contract_address = '0xff722329d2B5f708408bf7619C5C11D6e8F64698'
+#########################################################################
+
 node_url = 'https://rinkeby.infura.io/v3/646f232797a44ce58c336cf4e852905d'
 contract_source_path = 'voting_contract.sol'
-
-contract_address = '0xff722329d2B5f708408bf7619C5C11D6e8F64698'
 
 
 def compile_source_file(file_path):
