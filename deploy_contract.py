@@ -29,7 +29,7 @@ def compile_source_file(file_path):
     return compile_source(source)
 
 
-def deploy_contract(w3, contract_interface, account):
+def deploy_contract(w3, contract_interface, account, nonce):
     contract = w3.eth.contract(abi=contract_interface['abi'],
                                bytecode=contract_interface['bin'])
 
@@ -37,7 +37,7 @@ def deploy_contract(w3, contract_interface, account):
         'from':
             account.address,
         'nonce':
-            w3.eth.getTransactionCount(account.address),
+            nonce,
         'gas':
             4727597,
         'gasPrice':
@@ -55,7 +55,7 @@ def wait_for_receipt(w3, tx_hash, poll_interval):
         time.sleep(poll_interval)
 
 
-def give_right_to_vote(contract, account, voters):
+def give_right_to_vote(contract, account, voters, nonce):
     transactions = []
     # create + send Transactions
     for voter in voters:
@@ -64,12 +64,13 @@ def give_right_to_vote(contract, account, voters):
             'from':
                 account.address,
             'nonce':
-                w3.eth.getTransactionCount(account.address),
+                nonce,
             'gas':
                 4727597,
             'gasPrice':
                 w3.toWei('21', 'gwei')
         })
+        nonce = nonce + 1
         signed = account.signTransaction(construct_txn)
         transactions.append(
             w3.eth.sendRawTransaction(signed.rawTransaction).hex())
@@ -92,7 +93,11 @@ if __name__ == '__main__':
     compiled_sol = compile_source_file(contract_source_path)
     contract_id, contract_interface = compiled_sol.popitem()
 
-    transaction_hash = deploy_contract(w3, contract_interface, acct)
+    nonce = w3.eth.getTransactionCount(acct.address)
+
+    transaction_hash = deploy_contract(w3, contract_interface, acct, nonce)
+    nonce = nonce + 1
+
     receipt = w3.eth.waitForTransactionReceipt(transaction_hash)
 
     smart_contract_adress = receipt['contractAddress']
@@ -103,4 +108,4 @@ if __name__ == '__main__':
     contract = w3.eth.contract(abi=contract_interface['abi'],
                                bytecode=contract_interface['bin'],
                                address=smart_contract_adress)
-    give_right_to_vote(contract, acct, voters)
+    give_right_to_vote(contract, acct, voters, nonce)
