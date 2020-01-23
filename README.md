@@ -30,6 +30,9 @@ To share ether with other addresses, fill in the addresses and the amount of eth
 If you want to send ether to another address, use [make_transaction.py](make_transaction.py). This is basically the same as in [share_ether.py](share_ether.py).
 Don't forget to customize the receiver and the value that is being sent.
 
+If you get the error-message `ValueError: {'code': -32000, 'message': 'insufficient funds for gas * price + value'}`, refer to [this](https://ethereum.stackexchange.com/questions/9043/insufficient-funds-for-gas-price-value) link, or try with PyCharm.
+
+
 ## Deploy The Smart Contract
 To deploy the smart contract use [deploy_contract.py](deploy_contract.py). The contract that is being deployed is stored in [voting_contract.sol](voting_contract.sol).
 It is an adaptation of the smart contract given in the solidity-documentation, and lets participants vote for one of the proposals.
