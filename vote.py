@@ -4,15 +4,16 @@ from solc import compile_source
 
 ##############################Customize these filds##########################
 contract_address = '0xff722329d2B5f708408bf7619C5C11D6e8F64698'
-proposal = 1 # Number of the proposal ( Counting starts of course with 0 ;-))
+proposal = 1  # Number of the proposal ( Counting starts of course with 0 ;-))
+from_account_file = 'account.json'
+password = ''
 #############################################################################
 
 
 contract_source_path = 'voting_contract.sol'
-from_account_file = "account.json"
-
 
 node_url = 'https://rinkeby.infura.io/v3/646f232797a44ce58c336cf4e852905d'
+
 
 def compile_source_file(file_path):
     with open(file_path, 'r') as f:
@@ -49,7 +50,7 @@ if __name__ == '__main__':
 
     with open(from_account_file) as keyfile:
         encrypted_key = keyfile.read()
-        private_key = W3.eth.account.decrypt(encrypted_key, '')
+        private_key = W3.eth.account.decrypt(encrypted_key, password)
 
     compiled_sol = compile_source_file(contract_source_path)
     contract_id, contract_interface = compiled_sol.popitem()
