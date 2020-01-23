@@ -31,7 +31,7 @@ def import_keyfile(keyfile: str):
     return Account.privateKeyToAccount(private_key)
 
 
-def create_transaction(from_account: Account, to: str, value: float, nonce):
+def create_transaction(to: str, value: float, nonce):
     transaction = transaction_template.copy()
 
     transaction['to'] = to
@@ -41,8 +41,8 @@ def create_transaction(from_account: Account, to: str, value: float, nonce):
     return transaction
 
 
-def send_transaction(sender_account: Account, receiver: str, value: float):
-    transaction = create_transaction(sender_account, receiver, value)
+def send_transaction(receiver: str, value: float, nonce):
+    transaction = create_transaction(receiver, value, nonce)
     signed_transaction = from_account.sign_transaction(transaction)
     return w3.eth.sendRawTransaction(signed_transaction.rawTransaction)
 
@@ -56,7 +56,7 @@ if __name__ == '__main__':
 
     nonce = w3.eth.getTransactionCount(from_account.address)
     for receiver in receiver_addresses:
-        transaction_hash = send_transaction(from_account, receiver, value, nonce)
+        transaction_hash = send_transaction(receiver, value, nonce)
 
         transaction_hashes.append(transaction_hash)
         print('successfully sent ' + str(transaction_hash.hex()))
