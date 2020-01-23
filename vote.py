@@ -2,12 +2,17 @@ from web3 import Web3
 from web3.middleware import geth_poa_middleware
 from solc import compile_source
 
-node_url = 'https://rinkeby.infura.io/v3/646f232797a44ce58c336cf4e852905d'
+##############################Customize these filds##########################
+contract_address = '0xff722329d2B5f708408bf7619C5C11D6e8F64698'
+proposal = 1 # Number of the proposal ( Counting starts of course with 0 ;-))
+#############################################################################
+
+
 contract_source_path = 'voting_contract.sol'
 from_account_file = "account.json"
 
-proposal = "Pizza"
 
+node_url = 'https://rinkeby.infura.io/v3/646f232797a44ce58c336cf4e852905d'
 
 def compile_source_file(file_path):
     with open(file_path, 'r') as f:
@@ -17,11 +22,11 @@ def compile_source_file(file_path):
 
 def vote(W3, contract_interface, private_key, proposal):
     contract = W3.eth.contract(abi=contract_interface['abi'],
-                               bytecode=contract_interface['bin'])
+                               address=contract_address)
 
     acct = W3.eth.account.privateKeyToAccount(private_key)
 
-    construct_txn = contract.giveRightToVote(proposal).buildTransaction({
+    construct_txn = contract.functions.vote(proposal).buildTransaction({
         'from':
             acct.address,
         'nonce':
