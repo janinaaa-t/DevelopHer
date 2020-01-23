@@ -2,12 +2,14 @@ from eth_account import Account
 from web3 import Web3
 from web3.middleware import geth_poa_middleware
 
-node_url = "https://rinkeby.infura.io/v3/646f232797a44ce58c336cf4e852905d"
-from_account_file = "account.silke.json"
+########################Customize these fields###########################
+keyfile = 'account.json'
+password = ''
 to_adress = '0x2418B7e00C5B8590d6FeB89f1e70f9A13A4181f7'
+value = '0.01'  # value in Ether
+#########################################################################
 
-# Value in ether
-value = '0.9'
+node_url = "https://rinkeby.infura.io/v3/646f232797a44ce58c336cf4e852905d"
 
 transaction_template = {
     'to': None,
@@ -22,7 +24,7 @@ transaction_template = {
 def import_keyfile(keyfile: str):
     with open(keyfile, "r") as account_file:
         from_account_json = account_file.read()
-    private_key = Account.decrypt(from_account_json, "")
+    private_key = Account.decrypt(from_account_json, password)
     return Account.privateKeyToAccount(private_key)
 
 
@@ -40,18 +42,19 @@ if __name__ == '__main__':
     w3 = Web3(Web3.HTTPProvider(node_url))
     w3.middleware_onion.inject(geth_poa_middleware, layer=0)
 
-    from_account = import_keyfile(from_account_file)
+    from_account = import_keyfile(keyfile)
 
     new_transaction = create_transaction(from_account, to_adress, value)
 
-    # Transaction signieren
+    # signing transaction
     signed_Transaction = from_account.sign_transaction(new_transaction)
 
-    # Transaction abschicken
+    # sending transaction
     transaction_hash = w3.eth.sendRawTransaction(signed_Transaction.rawTransaction)
 
     print("transaction hash: " +
           str(transaction_hash.hex()))
-    # auf Bestätigung warten
+
+    # waiting for confirmation
     transaction_receipt = w3.eth.waitForTransactionReceipt(transaction_hash)
     print(transaction_receipt)
