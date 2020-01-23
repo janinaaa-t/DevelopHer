@@ -31,13 +31,13 @@ def import_keyfile(keyfile: str):
     return Account.privateKeyToAccount(private_key)
 
 
-def create_transaction(from_account: Account, to: str, value: float):
+def create_transaction(from_account: Account, to: str, value: float, nonce):
     transaction = transaction_template.copy()
 
     transaction['to'] = to
     transaction['value'] = w3.toWei(value, 'ether')
     transaction['gasPrice'] = w3.toWei(25, 'gwei')
-    transaction['nonce'] = w3.eth.getTransactionCount(from_account.address)
+    transaction['nonce'] = nonce
     return transaction
 
 
@@ -53,11 +53,14 @@ if __name__ == '__main__':
 
     transaction_hashes = []
     print('sending transactions!')
+
+    nonce = w3.eth.getTransactionCount(from_account.address)
     for receiver in receiver_addresses:
-        transaction_hash = send_transaction(from_account, receiver, value)
+        transaction_hash = send_transaction(from_account, receiver, value, nonce)
 
         transaction_hashes.append(transaction_hash)
         print('successfully sent ' + str(transaction_hash.hex()))
+        nonce = nonce + 1
 
     for hash in transaction_hashes:
         transaction_receipt = w3.eth.waitForTransactionReceipt(hash)
