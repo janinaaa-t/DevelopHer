@@ -12,11 +12,6 @@ node_url = 'https://rinkeby.infura.io/v3/646f232797a44ce58c336cf4e852905d'
 contract_source_path = 'voting_contract.sol'
 
 
-def compile_source_file(file_path):
-    with open(file_path, 'r') as f:
-        source = f.read()
-    return compile_source(source)
-
 
 if __name__ == '__main__':
     W3 = Web3(Web3.HTTPProvider(node_url))
@@ -25,9 +20,6 @@ if __name__ == '__main__':
     with open('abi.json', 'r') as abi_file:
         abi = json.load(abi_file)
 
-    compiled_sol = compile_source_file(contract_source_path)
-
-    contract_id, contract_interface = compiled_sol.popitem()
     contract = W3.eth.contract(abi=abi,
                                address=contract_address)
 

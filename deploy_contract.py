@@ -1,7 +1,6 @@
 import json
 import time
 from web3 import Web3
-from solc import compile_source
 from web3.middleware import geth_poa_middleware
 
 ###############################Customize these fields######################
