@@ -1,3 +1,5 @@
+import json
+
 from web3 import Web3
 from web3.middleware import geth_poa_middleware
 from solc import compile_source
@@ -20,10 +22,13 @@ if __name__ == '__main__':
     W3 = Web3(Web3.HTTPProvider(node_url))
     W3.middleware_onion.inject(geth_poa_middleware, layer=0)
 
+    with open('abi.json', 'r') as abi_file:
+        abi = json.load(abi_file)
+
     compiled_sol = compile_source_file(contract_source_path)
 
     contract_id, contract_interface = compiled_sol.popitem()
-    contract = W3.eth.contract(abi=contract_interface['abi'],
+    contract = W3.eth.contract(abi=abi,
                                address=contract_address)
 
     winner_in_bytes = contract.functions.winnerName().call()

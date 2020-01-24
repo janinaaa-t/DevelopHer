@@ -1,3 +1,4 @@
+import json
 import time
 from web3 import Web3
 from solc import compile_source
@@ -23,15 +24,9 @@ w3 = Web3(Web3.HTTPProvider(node_url))
 w3.middleware_onion.inject(geth_poa_middleware, layer=0)
 
 
-def compile_source_file(file_path):
-    with open(file_path, 'r') as f:
-        source = f.read()
-    return compile_source(source)
-
-
-def deploy_contract(w3, contract_interface, account, nonce):
-    contract = w3.eth.contract(abi=contract_interface['abi'],
-                               bytecode=contract_interface['bin'])
+def deploy_contract(w3, account, nonce):
+    contract = w3.eth.contract(abi=abi,
+                               bytecode=bin)
 
     construct_txn = contract.constructor(proposals).buildTransaction({
         'from':
@@ -92,12 +87,14 @@ if __name__ == '__main__':
 
     acct = w3.eth.account.privateKeyToAccount(private_key)
 
-    compiled_sol = compile_source_file(contract_source_path)
-    contract_id, contract_interface = compiled_sol.popitem()
+    with open('contract.bin', 'r') as contract_bin:
+        bin = contract_bin.read()
 
+    with open('abi.json', 'r') as abi_file:
+        abi = json.load(abi_file)
     nonce = w3.eth.getTransactionCount(acct.address)
 
-    transaction_hash = deploy_contract(w3, contract_interface, acct, nonce)
+    transaction_hash = deploy_contract(w3, acct, nonce)
     nonce = nonce + 1
 
     receipt = w3.eth.waitForTransactionReceipt(transaction_hash)
@@ -107,7 +104,7 @@ if __name__ == '__main__':
     print('contractAddress: ' + receipt['contractAddress'] + '\n' +
           'transactionHash: ' + receipt['transactionHash'].hex() + '\n')
 
-    contract = w3.eth.contract(abi=contract_interface['abi'],
-                               bytecode=contract_interface['bin'],
+    contract = w3.eth.contract(abi=abi,
+                               bytecode=bin,
                                address=smart_contract_adress)
     give_right_to_vote(contract, acct, voters, nonce)
